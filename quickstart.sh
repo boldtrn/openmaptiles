@@ -61,7 +61,7 @@ fi
 MIN_COMPOSE_VER=1.7.1
 MIN_DOCKER_VER=1.12.3
 STARTTIME=$(date +%s)
-STARTDATE=$(date +"%Y-%m-%dT%H:%M%z")
+STARTDATE=$(date +"%Y-%m-%d")
 
 log_file=./quickstart.log
 rm -f $log_file
@@ -170,6 +170,11 @@ rm -f "./data/${area}.mbtiles"
 
 echo " "
 echo "-------------------------------------------------------------------------------------"
+echo "====> : Clear out data directory to remove all old files"
+rm -f "./data/*"
+
+echo " "
+echo "-------------------------------------------------------------------------------------"
 echo "====> : Downloading ${area} from ${osm_server:-any source}..."
 make "download${osm_server:+-${osm_server}}"
 
@@ -223,6 +228,36 @@ else
   make start-db
   make import-data
 fi
+
+  echo "      :"
+  echo "      : Update Postgis Config"
+  echo "      :"
+  echo "max_connections = 200" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "shared_buffers = 32GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "effective_cache_size = 96GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "maintenance_work_mem = 2GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "checkpoint_completion_target = 0.9" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "wal_buffers = 16MB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "default_statistics_target = 100" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "random_page_cost = 1.1" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "effective_io_concurrency = 200" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "work_mem = 20971kB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "min_wal_size = 1GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "max_wal_size = 4GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "max_worker_processes = 24" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "max_parallel_workers_per_gather = 4" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+
+  echo "      :"
+  echo "      : Restart Postgis"
+  echo "      :"
+
+  make stop-db
+  make start-db
+
+  echo "      :"
+  echo "      : Done, the postgis DB is now tuned"
+  echo "      :"
+  cat /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
 
 echo " "
 echo "-------------------------------------------------------------------------------------"
@@ -280,6 +315,17 @@ echo "====> : Start generating MBTiles (containing gzipped MVT PBF) using PostGI
 echo "      : Output MBTiles: ./data/${area}.mbtiles  "
 echo "      : Source code: https://github.com/openmaptiles/openmaptiles-tools/blob/master/bin/generate-tiles "
 make generate-tiles-pg
+
+echo " "
+echo "-------------------------------------------------------------------------------------"
+echo "====> : Copying tile set"
+cp data/tiles.mbtiles ../generated_maps/tiles.mbtiles
+cp data/tiles.mbtiles "../generated_maps/$STARTDATE.mbtiles"
+
+echo " "
+echo "-------------------------------------------------------------------------------------"
+echo "====> : Notify about end of tile generation"
+../scripts/send_email.sh
 
 echo " "
 echo "-------------------------------------------------------------------------------------"
