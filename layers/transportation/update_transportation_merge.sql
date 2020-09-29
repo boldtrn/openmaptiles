@@ -123,8 +123,8 @@ SELECT ST_Simplify(geometry, ZRes(12)) AS geometry,
        toll,
        layer
 FROM osm_transportation_merge_linestring_gen_z11
-WHERE highway NOT IN ('tertiary', 'tertiary_link', 'busway')
-      AND construction NOT IN ('tertiary', 'tertiary_link', 'busway')
+WHERE highway NOT IN ('busway')
+      AND construction NOT IN ('busway')
     ) /* DELAY_MATERIALIZED_VIEW_CREATION */;
 CREATE INDEX IF NOT EXISTS osm_transportation_merge_linestring_gen_z10_geometry_idx
     ON osm_transportation_merge_linestring_gen_z10 USING gist (geometry);
@@ -151,7 +151,7 @@ SELECT ST_Simplify(geometry, ZRes(11)) AS geometry,
        toll,
        layer
 FROM osm_transportation_merge_linestring_gen_z10
-     -- Current view: motorway/primary/secondary, with _link variants and construction 
+     -- Current view: motorway/primary/secondary, with _link variants and construction
     ) /* DELAY_MATERIALIZED_VIEW_CREATION */;
 CREATE INDEX IF NOT EXISTS osm_transportation_merge_linestring_gen_z9_geometry_idx
     ON osm_transportation_merge_linestring_gen_z9 USING gist (geometry);
