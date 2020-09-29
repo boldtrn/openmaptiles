@@ -332,12 +332,10 @@ ifeq (,$(wildcard $(PBF_FILE)))
 	@echo "Downloading $(DOWNLOAD_AREA) with replication support into $(PBF_FILE) and $(IMPOSM_CONFIG_FILE) from $(if $(OSM_SERVER),$(OSM_SERVER),any source)"
 	@$(DOCKER_COMPOSE) run $(DC_OPTS) openmaptiles-tools download-osm $(OSM_SERVER) "$(DOWNLOAD_AREA)" \
 				--imposm-cfg "$(IMPOSM_CONFIG_FILE)" \
-				--bbox "$(AREA_BBOX_FILE)" \
 				--output "$(PBF_FILE)"
  else
 	@echo "Downloading $(DOWNLOAD_AREA) into $(PBF_FILE) from $(if $(OSM_SERVER),$(OSM_SERVER),any source)"
 	@$(DOCKER_COMPOSE) run $(DC_OPTS) openmaptiles-tools download-osm $(OSM_SERVER) "$(DOWNLOAD_AREA)" \
-				--bbox "$(AREA_BBOX_FILE)" \
 				--output "$(PBF_FILE)"
  endif
 	@echo ""
