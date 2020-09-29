@@ -61,7 +61,7 @@ fi
 MIN_COMPOSE_VER=1.7.1
 MIN_DOCKER_VER=1.12.3
 STARTTIME=$(date +%s)
-STARTDATE=$(date +"%Y-%m-%dT%H:%M%z")
+STARTDATE=$(date +"%Y-%m-%d")
 
 log_file=./quickstart.log
 rm -f $log_file
@@ -164,6 +164,11 @@ rm -f "./data/${area}.mbtiles"
 
 echo " "
 echo "-------------------------------------------------------------------------------------"
+echo "====> : Clear out data directory to remove all old files"
+rm -f "./data/*"
+
+echo " "
+echo "-------------------------------------------------------------------------------------"
 echo "====> : Downloading ${area} from ${osm_server:-any source}..."
 make "download${osm_server:+-${osm_server}}"
 
@@ -217,6 +222,36 @@ else
   make start-db
   make import-data
 fi
+
+  echo "      :"
+  echo "      : Update Postgis Config"
+  echo "      :"
+  echo "max_connections = 200" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "shared_buffers = 32GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "effective_cache_size = 96GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "maintenance_work_mem = 2GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "checkpoint_completion_target = 0.9" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "wal_buffers = 16MB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "default_statistics_target = 100" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "random_page_cost = 1.1" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "effective_io_concurrency = 200" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "work_mem = 20971kB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "min_wal_size = 1GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "max_wal_size = 4GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "max_worker_processes = 24" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "max_parallel_workers_per_gather = 4" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+
+  echo "      :"
+  echo "      : Restart Postgis"
+  echo "      :"
+
+  make stop-db
+  make start-db
+
+  echo "      :"
+  echo "      : Done, the postgis DB is now tuned"
+  echo "      :"
+  cat /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
 
 echo " "
 echo "-------------------------------------------------------------------------------------"
@@ -288,7 +323,38 @@ echo "      : See other MVT tools : https://github.com/mapbox/awesome-vector-til
 echo "      :  "
 echo "      : You will see a lot of deprecated warning in the log! This is normal!  "
 echo "      :    like :  Mapnik LOG>  ... is deprecated and will be removed in Mapnik 4.x ... "
-make generate-tiles
+
+docker-compose run -e MIN_ZOOM=0 -e MAX_ZOOM=9 -e MBTILES_NAME=z0-9.tiles.mbtiles generate-vectortiles
+
+REGION_NAMES=( NW SW NE SE )
+REGION_BBOX=( "-180.0,0,0,85.0511" "-180.0,-85.0511,0,0" "0,0,180.0,85.0511" "0,-85.0511,180.0,0" )
+
+for zoom in 10 11 12 13 14
+do
+  for i in 0 1 2 3
+  do
+    echo " "
+    echo "-------------------------------------------------------------------------------------"
+    echo "====> : Start generating MBTiles at zoom ${zoom} for region ${REGION_NAMES[i]}"
+    docker-compose run -e MIN_ZOOM=${zoom} -e MAX_ZOOM=${zoom} -e MBTILES_NAME=z${zoom}${REGION_NAMES[i]}.tiles.mbtiles -e BBOX=${REGION_BBOX[i]} generate-vectortiles
+  done
+done
+
+echo " "
+echo "-------------------------------------------------------------------------------------"
+echo "====> : Merging Tiles"
+tile-join --no-tile-size-limit -o data/tiles.mbtiles data/z0-9.tiles.mbtiles data/z10NW.tiles.mbtiles data/z10SW.tiles.mbtiles data/z10NE.tiles.mbtiles data/z10SE.tiles.mbtiles data/z11NW.tiles.mbtiles data/z11SW.tiles.mbtiles data/z11NE.tiles.mbtiles data/z11SE.tiles.mbtiles data/z12NW.tiles.mbtiles data/z12SW.tiles.mbtiles data/z12NE.tiles.mbtiles data/z12SE.tiles.mbtiles data/z13NW.tiles.mbtiles data/z13SW.tiles.mbtiles data/z13NE.tiles.mbtiles data/z13SE.tiles.mbtiles data/z14NW.tiles.mbtiles data/z14SW.tiles.mbtiles data/z14NE.tiles.mbtiles data/z14SE.tiles.mbtiles
+
+echo " "
+echo "-------------------------------------------------------------------------------------"
+echo "====> : Copying tile set"
+cp data/tiles.mbtiles ../generated_maps/tiles.mbtiles
+cp data/tiles.mbtiles "../generated_maps/$STARTDATE.mbtiles"
+
+echo " "
+echo "-------------------------------------------------------------------------------------"
+echo "====> : Notify about end of tile generation"
+../scripts/send_email.sh
 
 echo " "
 echo "-------------------------------------------------------------------------------------"
