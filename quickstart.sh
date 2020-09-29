@@ -218,6 +218,36 @@ else
   make import-data
 fi
 
+  echo "      :"
+  echo "      : Update Postgis Config"
+  echo "      :"
+  echo "max_connections = 100" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "shared_buffers = 15872MB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "effective_cache_size = 47616MB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "maintenance_work_mem = 2GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "checkpoint_completion_target = 0.9" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "wal_buffers = 16MB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "default_statistics_target = 100" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "random_page_cost = 1.1" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "effective_io_concurrency = 200" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "work_mem = 13544kB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "min_wal_size = 1GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "max_wal_size = 4GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "max_worker_processes = 12" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "max_parallel_workers_per_gather = 6" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+
+  echo "      :"
+  echo "      : Restart Postgis"
+  echo "      :"
+
+  make stop-db
+  make start-db
+
+  echo "      :"
+  echo "      : Done, the postgis DB is now tuned"
+  echo "      :"
+  cat /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+
 echo " "
 echo "-------------------------------------------------------------------------------------"
 echo "====> : Start importing OpenStreetMap data: ${area} -> imposm3[./build/mapping.yaml] -> PostgreSQL"
@@ -288,7 +318,12 @@ echo "      : See other MVT tools : https://github.com/mapbox/awesome-vector-til
 echo "      :  "
 echo "      : You will see a lot of deprecated warning in the log! This is normal!  "
 echo "      :    like :  Mapnik LOG>  ... is deprecated and will be removed in Mapnik 4.x ... "
-make generate-tiles
+#make generate-tiles
+echo " "
+echo "-------------------------------------------------------------------------------------"
+echo "====> : Skip generating Tiles, please call this yourself"
+echo "      : make generate-tiles  "
+
 
 echo " "
 echo "-------------------------------------------------------------------------------------"
