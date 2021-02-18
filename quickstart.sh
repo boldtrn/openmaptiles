@@ -321,6 +321,9 @@ echo "      :    like :  Mapnik LOG>  ... is deprecated and will be removed in M
 
 docker-compose run -e MIN_ZOOM=0 -e MAX_ZOOM=9 -e MBTILES_NAME=z0-9.tiles.mbtiles generate-vectortiles
 
+REGION_NAMES=( NW SW NE SE )
+REGION_BBOX=( "-180.0,0,0,85.0511" "-180.0,-85.0511,0,0" "0,0,180.0,85.0511" "0,-85.0511,180.0,0" )
+
 for zoom in 10 11 12 13 14
 do
   for i in 0 1 2 3
@@ -335,7 +338,7 @@ done
 echo " "
 echo "-------------------------------------------------------------------------------------"
 echo "====> : Merging Tiles"
-tilejoin -o data/tiles.mbtiles data/z0-9tiles.mbtiles data/z10NW.tiles.mbtiles data/z10SW.tiles.mbtiles data/z10NE.tiles.mbtiles data/z10SE.tiles.mbtiles data/z11NW.tiles.mbtiles data/z11SW.tiles.mbtiles data/z11NE.tiles.mbtiles data/z11SE.tiles.mbtiles data/z12NW.tiles.mbtiles data/z12SW.tiles.mbtiles data/z12NE.tiles.mbtiles data/z12SE.tiles.mbtiles data/z13NW.tiles.mbtiles data/z13SW.tiles.mbtiles data/z13NE.tiles.mbtiles data/z13SE.tiles.mbtiles data/z14NW.tiles.mbtiles data/z14SW.tiles.mbtiles data/z14NE.tiles.mbtiles data/z14SE.tiles.mbtiles
+tile-join -o data/tiles.mbtiles data/z0-9.tiles.mbtiles data/z10NW.tiles.mbtiles data/z10SW.tiles.mbtiles data/z10NE.tiles.mbtiles data/z10SE.tiles.mbtiles data/z11NW.tiles.mbtiles data/z11SW.tiles.mbtiles data/z11NE.tiles.mbtiles data/z11SE.tiles.mbtiles data/z12NW.tiles.mbtiles data/z12SW.tiles.mbtiles data/z12NE.tiles.mbtiles data/z12SE.tiles.mbtiles data/z13NW.tiles.mbtiles data/z13SW.tiles.mbtiles data/z13NE.tiles.mbtiles data/z13SE.tiles.mbtiles data/z14NW.tiles.mbtiles data/z14SW.tiles.mbtiles data/z14NE.tiles.mbtiles data/z14SE.tiles.mbtiles
 
 echo " "
 echo "-------------------------------------------------------------------------------------"
