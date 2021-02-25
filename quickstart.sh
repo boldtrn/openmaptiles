@@ -338,7 +338,18 @@ done
 echo " "
 echo "-------------------------------------------------------------------------------------"
 echo "====> : Merging Tiles"
-tile-join -o data/tiles.mbtiles data/z0-9.tiles.mbtiles data/z10NW.tiles.mbtiles data/z10SW.tiles.mbtiles data/z10NE.tiles.mbtiles data/z10SE.tiles.mbtiles data/z11NW.tiles.mbtiles data/z11SW.tiles.mbtiles data/z11NE.tiles.mbtiles data/z11SE.tiles.mbtiles data/z12NW.tiles.mbtiles data/z12SW.tiles.mbtiles data/z12NE.tiles.mbtiles data/z12SE.tiles.mbtiles data/z13NW.tiles.mbtiles data/z13SW.tiles.mbtiles data/z13NE.tiles.mbtiles data/z13SE.tiles.mbtiles data/z14NW.tiles.mbtiles data/z14SW.tiles.mbtiles data/z14NE.tiles.mbtiles data/z14SE.tiles.mbtiles
+tile-join --no-tile-size-limit -o data/tiles.mbtiles data/z0-9.tiles.mbtiles data/z10NW.tiles.mbtiles data/z10SW.tiles.mbtiles data/z10NE.tiles.mbtiles data/z10SE.tiles.mbtiles data/z11NW.tiles.mbtiles data/z11SW.tiles.mbtiles data/z11NE.tiles.mbtiles data/z11SE.tiles.mbtiles data/z12NW.tiles.mbtiles data/z12SW.tiles.mbtiles data/z12NE.tiles.mbtiles data/z12SE.tiles.mbtiles data/z13NW.tiles.mbtiles data/z13SW.tiles.mbtiles data/z13NE.tiles.mbtiles data/z13SE.tiles.mbtiles data/z14NW.tiles.mbtiles data/z14SW.tiles.mbtiles data/z14NE.tiles.mbtiles data/z14SE.tiles.mbtiles
+
+echo " "
+echo "-------------------------------------------------------------------------------------"
+echo "====> : Copying tile set"
+cp data/tiles.mbtiles ../generated_maps/tiles.mbtiles
+cp data/tiles.mbtiles "../generated_maps/$STARTDATE.mbtiles"
+
+echo " "
+echo "-------------------------------------------------------------------------------------"
+echo "====> : Notify about end of tile generation"
+../scripts/send_email.sh
 
 echo " "
 echo "-------------------------------------------------------------------------------------"
