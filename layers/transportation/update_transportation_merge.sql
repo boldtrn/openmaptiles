@@ -92,8 +92,8 @@ SELECT ST_Simplify(geometry, ZRes(11)) AS geometry,
        mtb_scale,
        layer
 FROM osm_transportation_merge_linestring_gen_z10
-WHERE highway NOT IN ('tertiary', 'tertiary_link', 'unclassified')
-      OR highway = 'construction' AND construction NOT IN ('tertiary', 'tertiary_link', 'unclassified')
+WHERE highway NOT IN ('tertiary', 'tertiary_link')
+      OR highway = 'construction' AND construction NOT IN ('tertiary', 'tertiary_link')
     ) /* DELAY_MATERIALIZED_VIEW_CREATION */;
 CREATE INDEX IF NOT EXISTS osm_transportation_merge_linestring_gen_z9_geometry_idx
     ON osm_transportation_merge_linestring_gen_z9 USING gist (geometry);
