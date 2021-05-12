@@ -61,7 +61,7 @@ fi
 MIN_COMPOSE_VER=1.7.1
 MIN_DOCKER_VER=1.12.3
 STARTTIME=$(date +%s)
-STARTDATE=$(date +"%Y-%m-%dT%H:%M%z")
+STARTDATE=$(date +"%Y-%m-%d")
 
 log_file=./quickstart.log
 rm -f $log_file
@@ -161,6 +161,11 @@ echo " "
 echo "-------------------------------------------------------------------------------------"
 echo "====> : Removing old MBTILES if exists ( ./data/${area}.mbtiles ) "
 rm -f "./data/${area}.mbtiles"
+
+echo " "
+echo "-------------------------------------------------------------------------------------"
+echo "====> : Clear out data directory to remove all old files"
+rm -f "./data/*"
 
 echo " "
 echo "-------------------------------------------------------------------------------------"
