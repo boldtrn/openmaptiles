@@ -2,7 +2,6 @@ This repo changes a few details about the default openmaptiles repo:
 
 - changed zoomlevel in transportation for some roads
     - added tertiary on z10
-    - added unclassified on z11
 - customize postgres config
 - remove housenumbers (tmp, as these are pretty expensive to build right now)
 - fix bug in building sql when importing the OSM file to Postgres, see https://github.com/openmaptiles/openmaptiles/issues/1022#issuecomment-748096152
