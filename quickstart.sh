@@ -241,10 +241,10 @@ fi
   echo "default_statistics_target = 100" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
   echo "random_page_cost = 1.1" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
   echo "effective_io_concurrency = 200" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
-  echo "work_mem = 20971kB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "work_mem = 32MB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
   echo "min_wal_size = 1GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
   echo "max_wal_size = 4GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
-  echo "max_worker_processes = 24" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "max_worker_processes = 32" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
   echo "max_parallel_workers_per_gather = 4" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
 
   echo "      :"
