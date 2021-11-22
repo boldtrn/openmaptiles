@@ -2,9 +2,9 @@ This repo changes a few details about the default openmaptiles repo:
 
 - changed zoomlevel in transportation for some roads
     - added tertiary on z10
+- use openmaptiles-tool 6.1 with midzoom (should become the default soon anyway...)
 - customize postgres config
 - remove housenumbers (tmp, as these are pretty expensive to build right now)
-- fix bug in building sql when importing the OSM file to Postgres, see https://github.com/openmaptiles/openmaptiles/issues/1022#issuecomment-748096152
 
 ## OpenMapTiles [![Build Status](https://github.com/openmaptiles/openmaptiles/workflows/OMT_CI/badge.svg?branch=master)](https://github.com/openmaptiles/openmaptiles/actions)
 
