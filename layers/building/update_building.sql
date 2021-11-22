@@ -40,12 +40,9 @@ BEGIN
                 SELECT (array_agg(dta.osm_id))[1] AS osm_id,
                     ST_Buffer(
                         ST_Union(
-                            -- https://github.com/openmaptiles/openmaptiles/issues/1022#issuecomment-748096152
-                            ST_MakeValid(
-                                ST_Buffer(
-                                    ST_SnapToGrid(dta.geometry, 0.000001)
-                                    , zres14, 'join=mitre')
-                                )
+                            ST_Buffer(
+                                ST_SnapToGrid(dta.geometry, 0.000001)
+                                , zres14, 'join=mitre')
                             )
                         , -zres14, 'join=mitre') AS geometry
                 FROM dta
