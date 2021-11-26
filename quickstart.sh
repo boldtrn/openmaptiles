@@ -171,7 +171,7 @@ rm -f "./data/${area}.mbtiles"
 echo " "
 echo "-------------------------------------------------------------------------------------"
 echo "====> : Clear out data directory to remove all old files"
-rm -f "./data/*"
+rm -f "./data/*.mbtiles"
 
 echo " "
 echo "-------------------------------------------------------------------------------------"
@@ -232,7 +232,7 @@ fi
   echo "      :"
   echo "      : Update Postgis Config"
   echo "      :"
-  echo "max_connections = 200" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  echo "max_connections = 300" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
   echo "shared_buffers = 32GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
   echo "effective_cache_size = 96GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
   echo "maintenance_work_mem = 2GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
@@ -246,6 +246,8 @@ fi
   echo "max_wal_size = 4GB" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
   echo "max_worker_processes = 32" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
   echo "max_parallel_workers_per_gather = 4" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
+  # The default value is 64 and there were issues during the tile generation due to that.
+  echo "max_locks_per_transaction = 128" >> /var/lib/docker/volumes/openmaptiles_pgdata/_data/postgresql.conf
 
   echo "      :"
   echo "      : Restart Postgis"
