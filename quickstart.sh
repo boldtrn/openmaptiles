@@ -180,6 +180,11 @@ make "download${osm_server:+-${osm_server}}"
 
 echo " "
 echo "-------------------------------------------------------------------------------------"
+echo "====> : Update ${area} to the latest version"
+make update-osm-file
+
+echo " "
+echo "-------------------------------------------------------------------------------------"
 echo "====> : Remove old generated source files ( ./build/* ) ( if they exist ) "
 make clean
 

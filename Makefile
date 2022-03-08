@@ -311,6 +311,12 @@ start-db-preloaded: export POSTGIS_IMAGE=openmaptiles/postgis-preloaded
 start-db-preloaded: export COMPOSE_HTTP_TIMEOUT=180
 start-db-preloaded: start-db
 
+.PHONY: update-osm-file
+update-osm-file:
+    $(DOCKER_COMPOSE) run $(DC_OPTS) openmaptiles-tools sh -c "osmupdate $(PBF_FILE) data/newplanet.osm.pbf"
+    mv data/newplanet.osm.pbf $(PBF_FILE)
+    rm data/newplanet.osm.pbf
+
 .PHONY: stop-db
 stop-db:
 	@echo "Stopping PostgreSQL..."
