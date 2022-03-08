@@ -397,9 +397,9 @@ import-osm: all start-db-nowait
 
 .PHONY: update-osm-file
 update-osm-file:
-    $(DOCKER_COMPOSE) run $(DC_OPTS) openmaptiles-tools sh -c "osmupdate $(PBF_FILE) data/newplanet.osm.pbf"
-    mv data/newplanet.osm.pbf $(PBF_FILE)
-    rm data/newplanet.osm.pbf
+	$(DOCKER_COMPOSE) run $(DC_OPTS) openmaptiles-tools sh -c "osmupdate $(PBF_FILE) data/newplanet.osm.pbf"
+	mv data/newplanet.osm.pbf $(PBF_FILE)
+	rm data/newplanet.osm.pbf
 
 .PHONY: update-osm
 update-osm: all start-db-nowait
