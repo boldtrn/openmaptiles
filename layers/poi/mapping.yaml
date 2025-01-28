@@ -75,6 +75,8 @@ def_poi_mapping_barrier: &poi_mapping_barrier
   - sally_port
   - stile
   - toll_booth
+  - swing_gate
+  - block
 
 # building values , see http://taginfo.openstreetmap.org/keys/building#values
 def_poi_mapping_building: &poi_mapping_building
